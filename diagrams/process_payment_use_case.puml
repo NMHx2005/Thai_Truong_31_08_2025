@@ -1,0 +1,57 @@
+@startuml ProcessPayment_UseCaseDiagram
+!theme plain
+title Hình 3.3: Biểu đồ use case chi tiết cho chức năng xử lý thanh toán
+
+left to right direction
+
+actor "Sales Staff\n(Nhân viên bán hàng)" as SalesStaff
+actor "Staff\n(Nhân viên)" as Staff
+actor "Member\n(Thành viên)" as Member
+
+' Inheritance relationships
+Member <|-- Staff
+Staff <|-- SalesStaff
+
+' System boundary
+rectangle "Hệ thống quản lý nhà hàng RestMan" {
+    usecase "Process Payment\n(Xử lý thanh toán)" as ProcessPayment
+    usecase "Login\n(Đăng nhập)" as Login
+    usecase "Staff Login\n(Đăng nhập nhân viên)" as StaffLogin
+    usecase "Select Payment Menu\n(Chọn menu thanh toán)" as SelectPaymentMenu
+    usecase "Search Table by Name\n(Tìm kiếm bàn theo tên)" as SearchTable
+    usecase "Select Table\n(Chọn bàn)" as SelectTable
+    usecase "View Invoice\n(Xem hóa đơn)" as ViewInvoice
+    usecase "Confirm Payment\n(Xác nhận thanh toán)" as ConfirmPayment
+    usecase "Print Invoice\n(In hóa đơn)" as PrintInvoice
+    usecase "Receive Payment\n(Nhận tiền)" as ReceivePayment
+}
+
+' Associations
+Member --> Login
+SalesStaff --> ProcessPayment
+
+' Include relationships
+ProcessPayment ..> Login : <<include>>
+Login ..> StaffLogin : <<include>>
+ProcessPayment ..> SelectPaymentMenu : <<include>>
+ProcessPayment ..> SearchTable : <<include>>
+ProcessPayment ..> SelectTable : <<include>>
+ProcessPayment ..> ViewInvoice : <<include>>
+ProcessPayment ..> ConfirmPayment : <<include>>
+ProcessPayment ..> PrintInvoice : <<include>>
+ProcessPayment ..> ReceivePayment : <<include>>
+
+' Flow description
+note right of ProcessPayment
+**Mô tả chức năng:**
+1. Chọn menu "thanh toán"
+2. Tìm kiếm bàn theo tên
+3. Chọn bàn đúng từ kết quả tìm kiếm
+4. Hóa đơn xuất hiện chứa danh sách 
+   món ăn đã đặt, đơn giá, tiền phụ, 
+   tổng tiền
+5. Xác nhận thanh toán
+6. In hóa đơn cho khách hàng và nhận tiền
+end note
+
+@enduml

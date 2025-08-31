@@ -1,0 +1,142 @@
+@startuml RestMan_DesignClassDiagram
+!theme plain
+title Hình 3.6: Biểu đồ lớp thiết kế - Hệ thống RestMan
+
+' Design Classes for Search Dish Information
+package "Dish Search Package" {
+    class DishSearchController {
+        -dishService: DishService
+        +searchDish(keyword: String): List<DishDTO>
+        +getDishDetails(dishId: String): DishDTO
+    }
+    
+    class DishService {
+        -dishRepository: DishRepository
+        +searchByName(keyword: String): List<Dish>
+        +getById(dishId: String): Dish
+        +convertToDTO(dish: Dish): DishDTO
+    }
+    
+    class DishRepository {
+        +findByNameContaining(keyword: String): List<Dish>
+        +findById(dishId: String): Optional<Dish>
+    }
+    
+    class DishDTO {
+        +dishId: String
+        +name: String
+        +description: String
+        +price: double
+        +category: String
+        +isAvailable: boolean
+    }
+}
+
+' Design Classes for Process Payment
+package "Payment Package" {
+    class PaymentController {
+        -paymentService: PaymentService
+        -tableService: TableService
+        +searchTable(tableName: String): List<TableDTO>
+        +getOrderDetails(tableId: String): OrderDTO
+        +processPayment(orderId: String): InvoiceDTO
+        +printInvoice(invoiceId: String): String
+    }
+    
+    class PaymentService {
+        -orderRepository: OrderRepository
+        -invoiceService: InvoiceService
+        +getOrderByTable(tableId: String): Order
+        +processPayment(orderId: String): Invoice
+        +calculateTotal(order: Order): double
+    }
+    
+    class TableService {
+        -tableRepository: TableRepository
+        +searchByName(tableName: String): List<Table>
+        +getById(tableId: String): Table
+    }
+    
+    class InvoiceService {
+        -invoiceRepository: InvoiceRepository
+        +createInvoice(order: Order): Invoice
+        +calculateTax(amount: double): double
+        +printInvoice(invoice: Invoice): String
+    }
+    
+    class OrderRepository {
+        +findByTableId(tableId: String): Optional<Order>
+        +findById(orderId: String): Optional<Order>
+        +save(order: Order): Order
+    }
+    
+    class TableRepository {
+        +findByNameContaining(tableName: String): List<Table>
+        +findById(tableId: String): Optional<Table>
+    }
+    
+    class InvoiceRepository {
+        +save(invoice: Invoice): Invoice
+        +findById(invoiceId: String): Optional<Invoice>
+    }
+}
+
+' DTOs
+class TableDTO {
+    +tableId: String
+    +name: String
+    +capacity: int
+    +status: String
+    +location: String
+}
+
+class OrderDTO {
+    +orderId: String
+    +orderDate: Date
+    +status: String
+    +totalAmount: double
+    +orderItems: List<OrderItemDTO>
+}
+
+class OrderItemDTO {
+    +orderItemId: String
+    +dishName: String
+    +quantity: int
+    +unitPrice: double
+    +subtotal: double
+}
+
+class InvoiceDTO {
+    +invoiceId: String
+    +orderId: String
+    +issueDate: Date
+    +totalAmount: double
+    +taxAmount: double
+    +finalAmount: double
+}
+
+' Relationships
+DishSearchController --> DishService
+DishService --> DishRepository
+DishService --> DishDTO
+
+PaymentController --> PaymentService
+PaymentController --> TableService
+PaymentService --> OrderRepository
+PaymentService --> InvoiceService
+TableService --> TableRepository
+InvoiceService --> InvoiceRepository
+
+PaymentController --> TableDTO
+PaymentController --> OrderDTO
+PaymentController --> InvoiceDTO
+PaymentService --> OrderDTO
+InvoiceService --> InvoiceDTO
+
+' Dependencies
+DishSearchController ..> DishDTO : creates
+PaymentController ..> TableDTO : creates
+PaymentController ..> OrderDTO : creates
+PaymentController ..> InvoiceDTO : creates
+
+@enduml

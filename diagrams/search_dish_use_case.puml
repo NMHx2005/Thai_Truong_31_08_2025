@@ -1,0 +1,48 @@
+@startuml SearchDish_UseCaseDiagram
+!theme plain
+title Hình 3.2: Biểu đồ use case chi tiết cho chức năng tìm kiếm thông tin món ăn
+
+left to right direction
+
+actor "Customer\n(Khách hàng)" as Customer
+actor "Member\n(Thành viên)" as Member
+
+' Inheritance relationship
+Member <|-- Customer
+
+' System boundary
+rectangle "Hệ thống quản lý nhà hàng RestMan" {
+    usecase "Search Dish Information\n(Tìm kiếm thông tin món ăn)" as SearchDish
+    usecase "Login\n(Đăng nhập)" as Login
+    usecase "Customer Login\n(Đăng nhập khách hàng)" as CustomerLogin
+    usecase "Select Search Menu\n(Chọn menu tìm kiếm)" as SelectSearchMenu
+    usecase "Enter Dish Name\n(Nhập tên món ăn)" as EnterDishName
+    usecase "View Dish List\n(Xem danh sách món ăn)" as ViewDishList
+    usecase "View Dish Details\n(Xem chi tiết món ăn)" as ViewDishDetails
+}
+
+' Associations
+Member --> Login
+Customer --> SearchDish
+
+' Include relationships
+SearchDish ..> Login : <<include>>
+Login ..> CustomerLogin : <<include>>
+SearchDish ..> SelectSearchMenu : <<include>>
+SearchDish ..> EnterDishName : <<include>>
+SearchDish ..> ViewDishList : <<include>>
+SearchDish ..> ViewDishDetails : <<include>>
+
+' Flow description
+note right of SearchDish
+**Mô tả chức năng:**
+1. Chọn menu "tìm thông tin món ăn"
+2. Nhập tên món ăn cần tìm kiếm
+3. Hệ thống hiển thị danh sách món ăn 
+   có tên chứa từ khóa đã nhập
+4. Click vào món ăn để xem chi tiết
+5. Hệ thống hiển thị thông tin chi tiết 
+   về món ăn
+end note
+
+@enduml
