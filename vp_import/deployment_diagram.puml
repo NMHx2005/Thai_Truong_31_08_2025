@@ -1,0 +1,12 @@
+@startuml
+node Browser
+node "Web Server\n(Nginx/Apache)" as Web
+node "App Server\n(J2EE/Spring Boot)" as App
+database "RDBMS\n(PostgreSQL/MySQL)" as DB
+node "Bill Printer" as POS
+
+Browser --> Web : HTTPS
+Web --> App : HTTP
+App --> DB : JDBC
+App --> POS : Print
+@enduml

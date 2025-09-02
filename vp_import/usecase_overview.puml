@@ -1,0 +1,56 @@
+@startuml
+left to right direction
+actor Manager
+actor "Warehouse Staff" as Warehouse
+actor "Sales Staff" as Sales
+actor Customer
+
+rectangle "RestMan System" {
+  usecase "Login" as UC_Login
+  usecase "Logout" as UC_Logout
+
+  usecase "Manage Dishes" as UC_ManageDishes
+  usecase "Manage Ingredients" as UC_ManageIngs
+  usecase "Manage Supplier" as UC_ManageSupplier
+  usecase "Setup Menu Combo" as UC_MenuCombo
+
+  usecase "View Statistics" as UC_ViewStats
+  usecase "View Dish Statistics" as UC_StatDish
+  usecase "View Ingredient Statistics" as UC_StatIng
+  usecase "View Customer Statistics" as UC_StatCustomer
+  usecase "View Supplier Statistics" as UC_StatSupplier
+
+  usecase "Receive Inventory from Supplier" as UC_ReceiveInv
+
+  usecase "Search Dishes" as UC_Search
+  usecase "Reserve Table Online" as UC_Reserve
+  usecase "Place Order Online" as UC_OrderOnline
+
+  usecase "Receive Customer at Table" as UC_ReceiveCustomer
+  usecase "Take Order at Table" as UC_TakeOrder
+  usecase "Receive Payment at Table" as UC_Payment
+}
+
+Manager --> UC_Login
+Manager --> UC_Logout
+Manager --> UC_ViewStats
+Manager --> UC_ManageDishes
+Manager --> UC_ManageIngs
+Manager --> UC_MenuCombo
+
+Warehouse --> UC_ManageSupplier
+Warehouse --> UC_ReceiveInv
+
+Sales --> UC_ReceiveCustomer
+Sales --> UC_TakeOrder
+Sales --> UC_Payment
+
+Customer --> UC_Search
+Customer --> UC_Reserve
+Customer --> UC_OrderOnline
+
+UC_ViewStats <.. UC_StatDish : <<include>>
+UC_ViewStats <.. UC_StatIng : <<include>>
+UC_ViewStats <.. UC_StatCustomer : <<include>>
+UC_ViewStats <.. UC_StatSupplier : <<include>>
+@enduml

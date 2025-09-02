@@ -1,0 +1,20 @@
+@startuml
+left to right direction
+actor "Sales Staff" as Sales
+rectangle "RestMan System" {
+  usecase "Open Payment Menu" as UC_Open
+  usecase "Find Table by Name/Code" as UC_Find
+  usecase "Select Table from Results" as UC_Select
+  usecase "Show Bill" as UC_Bill
+  usecase "Confirm Payment" as UC_Confirm
+  usecase "Print Invoice" as UC_Print
+  usecase "Receive Cash/Transfer" as UC_Receive
+}
+Sales --> UC_Open
+UC_Open ..> UC_Find : <<include>>
+UC_Find ..> UC_Select : <<include>>
+UC_Select ..> UC_Bill : <<include>>
+UC_Bill ..> UC_Confirm : <<include>>
+UC_Confirm ..> UC_Print : <<include>>
+UC_Print ..> UC_Receive : <<include>>
+@enduml

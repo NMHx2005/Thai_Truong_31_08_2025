@@ -1,0 +1,23 @@
+@startuml
+actor "Sales Staff" as SS
+participant PaymentUI as UI
+participant OrderService as OS
+database OrderRepository as OR
+participant PaymentService as PS
+database PaymentRepository as PR
+participant InvoiceService as IS
+
+SS -> UI : nhập tên/mã bàn
+UI -> OS : findOpenOrder(keyword)
+OS -> OR : queryOpenOrderByTable(keyword)
+OR --> OS : Order(+items)
+OS --> UI : OrderSummary
+SS -> UI : xác nhận thanh toán
+UI -> PS : pay(orderId, method)
+PS -> PR : save(Payment)
+PS -> IS : issueInvoice(orderId)
+IS --> UI : Invoice No./PDF
+PS --> OS : markPaid(orderId)
+OS --> UI : set Table=FREE
+UI --> SS : in hóa đơn
+@enduml

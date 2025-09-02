@@ -1,0 +1,19 @@
+@startuml
+actor Customer as C
+participant DishSearchUI as UI
+participant DishService as S
+database DishRepository as R
+
+C -> UI : nhập keyword
+UI -> S : search(keyword)
+S -> R : findByNameContains(keyword)
+R --> S : List<Dish>
+S --> UI : List<Dish>
+UI -> C : hiển thị danh sách
+C -> UI : chọn 1 món
+UI -> S : getDetail(dishId)
+S -> R : findById(dishId)
+R --> S : Dish
+S --> UI : DishDetail
+UI -> C : hiển thị chi tiết
+@enduml

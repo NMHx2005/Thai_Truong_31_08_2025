@@ -1,0 +1,171 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+class UserAccount {
+  +id: Long
+  +username: String
+  +password_hash: String
+  +full_name: String
+  +email: String
+  +phone: String
+  +role: String
+}
+
+class Staff {
+  +id: Long
+  +code: String
+  +position: String
+  +joined_at: Date
+}
+UserAccount <|-- Staff
+class Manager
+class SalesStaff
+class WarehouseStaff
+Staff <|-- Manager
+Staff <|-- SalesStaff
+Staff <|-- WarehouseStaff
+
+class Customer {
+  +id: Long
+  +name: String
+  +phone: String
+  +email: String
+  +dob: Date
+  +gender: String
+}
+
+class Supplier {
+  +id: Long
+  +name: String
+  +address: String
+  +phone: String
+  +email: String
+  +contact_person: String
+  +note: String
+}
+
+class Ingredient {
+  +id: Long
+  +code: String
+  +name: String
+  +unit: String
+  +cost_price: Decimal
+  +stock_qty: Decimal
+  +status: String
+}
+
+class Dish {
+  +id: Long
+  +code: String
+  +name: String
+  +description: String
+  +price: Decimal
+  +is_active: Boolean
+  +image_url: String
+}
+
+class DishIngredient {
+  +dish_id: Long
+  +ingredient_id: Long
+  +quantity_required: Decimal
+}
+Dish "1" -- "*" DishIngredient
+Ingredient "1" -- "*" DishIngredient
+
+class Combo {
+  +id: Long
+  +code: String
+  +name: String
+  +price: Decimal
+  +description: String
+}
+class ComboItem {
+  +combo_id: Long
+  +dish_id: Long
+  +quantity: Int
+}
+Combo "1" -- "*" ComboItem
+Dish "1" -- "*" ComboItem
+
+class TableEntity {
+  +id: Long
+  +code: String
+  +name: String
+  +capacity: Int
+  +status: String
+}
+
+class Reservation {
+  +id: Long
+  +customer_id: Long
+  +table_id: Long
+  +reserved_at: DateTime
+  +people: Int
+  +note: String
+  +status: String
+}
+Customer "1" -- "*" Reservation
+TableEntity "1" -- "*" Reservation
+
+class Order {
+  +id: Long
+  +table_id: Long
+  +customer_id: Long
+  +sales_staff_id: Long
+  +created_at: DateTime
+  +status: String
+}
+class OrderItem {
+  +id: Long
+  +order_id: Long
+  +dish_id: Long
+  +combo_id: Long
+  +quantity: Int
+  +unit_price: Decimal
+  +amount: Decimal
+}
+Order "1" -- "*" OrderItem
+TableEntity "1" -- "*" Order
+Customer "1" -- "*" Order
+SalesStaff "1" -- "*" Order
+
+class Payment {
+  +id: Long
+  +order_id: Long
+  +method: String
+  +paid_amount: Decimal
+  +paid_at: DateTime
+  +status: String
+}
+class Invoice {
+  +id: Long
+  +order_id: Long
+  +number: String
+  +total_amount: Decimal
+  +tax_amount: Decimal
+  +discount_amount: Decimal
+  +grand_total: Decimal
+  +issued_at: DateTime
+}
+Order "1" -- "*" Payment
+Order "1" -- "1" Invoice
+
+class InventoryReceipt {
+  +id: Long
+  +supplier_id: Long
+  +warehouse_staff_id: Long
+  +received_at: DateTime
+  +note: String
+}
+class InventoryReceiptItem {
+  +id: Long
+  +receipt_id: Long
+  +ingredient_id: Long
+  +quantity: Decimal
+  +unit_cost: Decimal
+  +amount: Decimal
+}
+InventoryReceipt "1" -- "*" InventoryReceiptItem
+Supplier "1" -- "*" InventoryReceipt
+WarehouseStaff "1" -- "*" InventoryReceipt
+@enduml

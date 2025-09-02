@@ -1,0 +1,11 @@
+@startuml
+package controller
+package service
+package repository
+package model
+package dto
+controller --> service
+service --> repository
+service --> model
+controller --> dto
+@enduml

@@ -1,0 +1,23 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+class DishController
+class PaymentController
+class OrderController
+
+class DishService
+class PaymentService
+class OrderService
+
+class DishRepository
+class OrderRepository
+class PaymentRepository
+
+DishController --> DishService
+PaymentController --> PaymentService
+OrderController --> OrderService
+
+DishService --> DishRepository
+OrderService --> OrderRepository
+PaymentService --> PaymentRepository
+@enduml

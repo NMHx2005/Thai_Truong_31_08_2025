@@ -1,0 +1,12 @@
+@startuml
+left to right direction
+actor Customer
+rectangle "RestMan System" {
+  usecase "Search Dishes" as UC_Search
+  usecase "View Dish List" as UC_List
+  usecase "View Dish Detail" as UC_Detail
+}
+Customer --> UC_Search
+UC_Search ..> UC_List : <<extend>>\nextension point: after search
+UC_List ..> UC_Detail : <<extend>>\nextension point: select item
+@enduml
