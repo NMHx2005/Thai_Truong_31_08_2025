@@ -333,6 +333,65 @@ Bảo mật & quyền
 
 ---
 
+### 1.d) Use Case chi tiết + Mô tả UC cho module “Thống kê khách hàng theo doanh thu”
+
+[Chèn hình PlantUML: vp_import/usecase_customer_revenue_stats.puml]
+
+Phạm vi và mục tiêu
+- Phạm vi: Dành cho vai trò Manager (hoặc nhân sự được ủy quyền xem báo cáo).
+- Mục tiêu: Xem danh sách khách hàng theo tổng doanh thu trong một khoảng thời gian; cho phép drill-down đến lịch sử mua và hóa đơn chi tiết.
+
+Các Use Case thành phần
+- View Customer Revenue Statistics: hiển thị bảng xếp hạng khách hàng theo tổng chi tiêu.
+- Select Statistic Period: chọn ngày bắt đầu/kết thúc; bộ lọc chi nhánh/nhóm món (nếu có).
+- View Customer Purchase History: xem các lần đến/đơn hàng đã thanh toán của một khách trong giai đoạn.
+- View Customer’s Detail Invoice: xem hóa đơn cụ thể, danh sách món/đơn giá/thành tiền, chiết khấu/thuế.
+
+Tiền điều kiện
+- Người dùng đã đăng nhập với quyền xem báo cáo; dữ liệu hóa đơn hợp lệ trong giai đoạn chọn.
+
+Hậu điều kiện
+- Không thay đổi dữ liệu nghiệp vụ; có thể ghi log truy cập báo cáo.
+
+Luồng chính (Happy path)
+1) Manager chọn menu “Xem báo cáo” → “Khách hàng theo doanh thu”.
+2) Hệ thống hiển thị bộ lọc: thời gian từ/đến (date picker), chi nhánh (nếu có), kênh bán (tại bàn/online), nhóm khách (VIP/thường) – tùy cấu hình.
+3) Manager nhấn “Xem thống kê”.
+4) Hệ thống tổng hợp dữ liệu đã thanh toán trong giai đoạn → trả bảng danh sách khách hàng gồm: Họ tên, Số điện thoại, Tổng hóa đơn, Tổng doanh thu, Số lần đến; sắp xếp giảm dần theo doanh thu.
+5) Manager bấm vào một khách bất kỳ để xem “Lịch sử mua”.
+6) Hệ thống hiển thị danh sách các hóa đơn của khách trong giai đoạn: ngày/giờ, bàn, tổng tiền, phương thức; cho phép lọc/ sắp xếp.
+7) Manager bấm vào một hóa đơn để xem “Hóa đơn chi tiết”.
+8) Hệ thống hiển thị hóa đơn chi tiết: danh sách dòng (dish/combo, quantity, unit_price, amount), subtotal, discount, tax, grand_total.
+
+Ngoại lệ/nhánh
+- 2a) Thời gian không hợp lệ (từ > đến) → hệ thống yêu cầu nhập lại.
+- 4a) Không có dữ liệu trong giai đoạn → hiển thị “Không có kết quả” và đề xuất giai đoạn khác.
+- 8a) Hóa đơn bị khóa lưu trữ ngoại tuyến → chỉ hiển thị bản snapshot/PDF đã lưu.
+
+Quy tắc nghiệp vụ và kiểm tra
+- Chỉ tính hóa đơn ở trạng thái PAID; bỏ qua order chưa thanh toán/hủy.
+- Đồng tiền hiển thị theo cấu hình cửa hàng; định dạng nghìn/chấm phẩy chuẩn.
+- Phân quyền: chỉ người có vai trò Manager (hoặc quyền báo cáo) mới truy cập được màn hình này.
+
+Trường dữ liệu và giao diện
+- Bộ lọc: from_date, to_date, branch_id?, channel?, customer_group?.
+- Bảng xếp hạng: rank, customer_name, phone, visit_count, revenue_total.
+- Lịch sử mua: invoice_no, paid_at, table_code, payment_method, grand_total.
+- Hóa đơn chi tiết: danh sách dòng (dish/combo, quantity, unit_price, amount), subtotal, discount, tax, grand_total.
+
+Tiêu chí chấp nhận (Acceptance Criteria)
+- Tổng hợp dữ liệu nhanh với 100k hóa đơn trong 30 ngày (< 3s trên môi trường chuẩn cửa hàng đơn).
+- Số liệu giữa bảng xếp hạng và tổng chi tiết phải khớp (sai lệch ≤ 0,01 do làm tròn).
+- Tất cả số tiền hiển thị đúng định dạng tiền tệ và có ký hiệu đơn vị.
+
+Bảo mật & nhật ký
+- Nhật ký truy cập báo cáo gồm: user, thời điểm, khoảng thời gian lọc, tổng bản ghi.
+- Không cho tải về dữ liệu khách hàng khi người dùng không có quyền Export.
+
+[Hết mục Use Case chi tiết “Thống kê khách hàng theo doanh thu”]
+
+---
+
 ## Câu 2. Thực thể và biểu đồ lớp phân tích
 
 ### 2.a) Danh sách lớp thực thể và thuộc tính cơ bản

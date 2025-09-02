@@ -1,0 +1,18 @@
+@startuml
+left to right direction
+actor Manager
+rectangle "RestMan System" {
+  usecase "Login" as UC_Login
+  usecase "View Statistics" as UC_ViewStats
+  usecase "View Customer Revenue Statistics" as UC_CustRev
+  usecase "Select Statistic Period" as UC_SelectPeriod
+  usecase "View Customer Purchase History" as UC_History
+  usecase "View Customer's Detail Invoice" as UC_Invoice
+}
+Manager --> UC_Login
+Manager --> UC_ViewStats
+UC_ViewStats ..> UC_CustRev : <<extend>>
+UC_CustRev ..> UC_SelectPeriod : <<include>>
+UC_CustRev ..> UC_History : <<extend>>
+UC_History ..> UC_Invoice : <<extend>>
+@enduml
