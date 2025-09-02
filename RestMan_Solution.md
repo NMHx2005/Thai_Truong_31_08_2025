@@ -57,71 +57,139 @@
 Tóm tắt các bước thực hiện:
 - Bước 1: Giới thiệu mục đích hệ thống
 - Bước 2: Phạm vi hệ thống (đối tượng sử dụng và chức năng theo vai trò)
-- Bước 3: Mô tả chi tiết hoạt động nghiệp vụ cho từng chức năng chính
+- Bước 3: Mô tả chi tiết hoạt động nghiệp vụ cho từng chức năng chính (kèm ngoại lệ, tiêu chí chấp nhận)
 - Bước 4: Các đối tượng được quản lý/xử lý và thuộc tính cốt lõi
-- Bước 5: Quan hệ (số lượng) giữa các đối tượng
+- Bước 5: Quan hệ (số lượng) giữa các đối tượng, trạng thái, quy tắc toàn vẹn dữ liệu
+- Bước 6: Ma trận phân quyền, yêu cầu phi chức năng (NFR), giả định & ràng buộc
 
 Bước 1 – Mục đích của hệ thống:
-- RestMan là ứng dụng web hỗ trợ quản lý vận hành nhà hàng: quản lý danh mục món ăn/ nguyên liệu/ nhà cung cấp, thiết lập menu combo, quản trị kho nhập nguyên liệu, phục vụ khách tại bàn (mở order, ghi món), và thanh toán/in hóa đơn nhanh chóng.
-- Hệ thống cung cấp công cụ tìm kiếm món cho khách hàng và chức năng đặt bàn/đặt món trực tuyến để tối ưu quy trình phục vụ.
-- Quản lý có thể theo dõi thống kê doanh số theo món/khách hàng/nhà cung cấp và tình trạng tồn kho để ra quyết định.
+- RestMan là ứng dụng web hỗ trợ vận hành nhà hàng theo mô hình phục vụ tại bàn và đặt chỗ/đặt món trực tuyến.
+- Mục tiêu chính:
+  - Tối ưu hóa quy trình phục vụ: tiếp nhận khách, ghi món nhanh, tính tiền chính xác, in hóa đơn chuyên nghiệp.
+  - Quản trị dữ liệu tập trung: món ăn, nguyên liệu, nhà cung cấp, combo, tồn kho.
+  - Cung cấp báo cáo/biểu đồ giúp quản lý ra quyết định: doanh thu theo món/khách hàng/NCC, chi phí nguyên liệu, hiệu quả combo.
+  - Giảm sai sót tác nghiệp, rút ngắn thời gian chờ của khách, và hỗ trợ mở rộng đa chi nhánh trong tương lai.
 
 Bước 2 – Phạm vi hệ thống (vai trò và chức năng):
-- Nhân viên (Staff – mọi vai trò):
-  - Đăng nhập, Đăng xuất.
+- Nhân viên (Staff – mọi vai trò): Đăng nhập/Đăng xuất; đổi mật khẩu; xem thông báo.
 - Nhân viên quản lý (Manager):
-  - Xem thống kê: món, nguyên liệu, khách hàng, nhà cung cấp.
-  - Quản lý món ăn; thiết lập menu combo.
-  - Quản lý nguyên liệu (chuẩn hóa dữ liệu cho kho).
+  - Quản lý danh mục: Món ăn (CRUD, gán hình, gợi ý nguyên liệu), Nguyên liệu (CRUD, đơn vị), Nhà cung cấp (CRUD), Combo (CRUD, gợi ý món bán kèm).
+  - Xem thống kê/báo cáo: theo thời gian (ngày/tuần/tháng), theo món, theo khách, theo NCC; lọc xuất CSV/PDF.
+  - Thiết lập quy tắc: thuế/chiết khấu mặc định, định dạng số hóa đơn, giới hạn công nợ NCC (nếu bật).
 - Nhân viên kho (Warehouse Staff):
-  - Nhập nguyên liệu từ nhà cung cấp (tạo phiếu nhập, cập nhật tồn kho).
-  - Quản lý nhà cung cấp.
+  - Tạo phiếu nhập nguyên liệu từ NCC: nhập dòng hàng, SL, đơn giá; đính kèm chứng từ.
+  - Duyệt phiếu nhập (nếu phân tách vai trò tạo/duyệt); cập nhật tồn kho theo trạng thái phiếu.
+  - Tra cứu lịch sử nhập; xem tồn kho hiện tại; xuất báo cáo nhập theo kỳ.
 - Nhân viên bán hàng (Sales Staff):
-  - Nhận khách tại bàn, gán bàn và mở order.
-  - Ghi order tại bàn (món/SL/ghi chú), cập nhật trạng thái order.
-  - Nhận thanh toán tại bàn, in hóa đơn, giải phóng bàn.
+  - Nhận khách: gán bàn trống phù hợp sức chứa; ghi chú yêu cầu đặc biệt (dị ứng, trẻ nhỏ, sinh nhật...).
+  - Ghi order tại bàn: thêm/sửa/xóa dòng món; chọn combo; ghi chú chế biến; tách/gộp món theo khách.
+  - Chuyển bàn/gộp bàn: chuyển order giữa bàn; gộp nhiều order trước khi thanh toán.
+  - Nhận thanh toán: chọn phương thức (tiền mặt/thẻ/chuyển khoản), tách/ghép hóa đơn, in hóa đơn/biên lai.
 - Khách hàng (Customer):
-  - Tìm kiếm món ăn.
-  - Đặt bàn/đặt món trực tuyến (tùy chính sách nhà hàng).
+  - Tìm kiếm món: theo từ khóa, loại món, giá; xem chi tiết và gợi ý combo.
+  - Đặt bàn/đặt món trực tuyến: chọn thời gian, số khách, ghi chú; (tùy chọn) chọn món trước; nhận xác nhận qua SMS/Email.
 
-Bước 3 – Hoạt động nghiệp vụ chi tiết:
-- Khách hàng tìm kiếm món ăn:
-  1) Truy cập website → chọn menu "Tìm món" → nhập từ khóa → nhấn tìm.
-  2) Hệ thống trả danh sách món phù hợp (tên, giá, mô tả ngắn, hình đại diện, tình trạng bán).
-  3) Khách chọn một món để xem chi tiết (mô tả, giá, nguyên liệu chính, hình ảnh, khuyến nghị combo).
-  4) Ngoại lệ: không có kết quả → gợi ý từ khóa gần đúng/ nhóm món liên quan.
-- Nhân viên nhận thanh toán tại bàn:
-  1) Mở menu "Thanh toán" → nhập tên/mã bàn.
-  2) Chọn bàn đúng từ danh sách kết quả; hệ thống tải order đang mở/chờ thanh toán.
-  3) Hiển thị hóa đơn: danh sách món, SL, đơn giá, thành tiền từng dòng, tổng tiền, thuế/giảm giá.
-  4) Nhân viên xác nhận → hệ thống tạo bản ghi Payment và sinh số hóa đơn (Invoice) → in hóa đơn.
-  5) Cập nhật trạng thái order = "PAID", bàn = "FREE"; ghi nhận phương thức thanh toán (cash/card/transfer).
-  6) Ngoại lệ: tách/ghép hóa đơn, điều chỉnh dòng món, hủy thanh toán (rollback) – được hỗ trợ theo phân quyền.
-- Kho nhập nguyên liệu từ NCC:
-  1) Nhân viên kho tạo phiếu nhập → chọn NCC → nhập danh sách nguyên liệu (mã, SL, đơn giá).
-  2) Hệ thống kiểm tra nhất quán (đơn vị tính, tồn kho âm) → lưu phiếu nhập.
-  3) Cập nhật tồn kho ngay khi phiếu nhập được ghi nhận; có thể hỗ trợ trạng thái "Nháp/Hoàn tất".
-- Quản lý menu combo:
-  1) Tạo combo → chọn các món và số lượng → nhập giá combo.
-  2) Hệ thống kiểm tra định mức/giá; combo xuất hiện trên giao diện order và gợi ý kèm món.
-- Thống kê (ví dụ):
-  - Doanh thu theo món, theo ngày/tuần/tháng.
-  - Top khách hàng theo doanh tiêu dùng.
-  - Giá trị nhập nguyên liệu theo nhà cung cấp.
+Bước 3 – Hoạt động nghiệp vụ chi tiết theo chức năng:
 
-Bước 4 – Đối tượng và thuộc tính lõi (tóm tắt):
-- Con người: UserAccount/Staff/Manager/SalesStaff/WarehouseStaff, Customer, Supplier.
-- Danh mục & cấu hình: Dish, Ingredient, DishIngredient, Combo, ComboItem, TableEntity.
-- Giao dịch: Order, OrderItem, Payment, Invoice, Reservation.
-- Kho: InventoryReceipt, InventoryReceiptItem.
-- Thuộc tính chi tiết cho từng thực thể đã liệt kê ở phần "BẢNG TỪ KHÓA" và được mô tả kỹ trong sơ đồ lớp.
+A) Khách hàng tìm kiếm món ăn (Search Dishes)
+- Luồng chuẩn (Happy path):
+  1) Khách mở trang tìm món → nhập từ khóa → nhấn Tìm.
+  2) Hệ thống chuẩn hóa từ khóa (trim, bỏ dấu, lower-case) → truy vấn theo tên/bí danh/từ khóa mô tả.
+  3) Kết quả trả về danh sách: ảnh, tên, giá, mô tả ngắn, nhãn (mới/đề xuất/hết hàng).
+  4) Khách bấm vào một món → trang chi tiết: mô tả đầy đủ, nguyên liệu chính, giá, hình ảnh, món liên quan, combo gợi ý.
+  5) (Nếu đăng nhập) Khách có thể thêm vào danh sách ưa thích hoặc thêm vào giỏ đặt món trước.
+- Ngoại lệ/nhánh:
+  - Không có kết quả → hiển thị gợi ý từ khóa gần đúng; hiển thị top món bán chạy.
+  - Món tạm ngưng bán → hiển thị nhãn và ẩn nút đặt trước.
+- Tiêu chí chấp nhận (Acceptance Criteria):
+  - Tìm theo không phân biệt hoa/thường có dấu/không dấu; thời gian phản hồi < 1s với 10k món.
+  - Trang chi tiết hiển thị đủ 6 trường: tên, mô tả, giá, hình, thành phần chính, trạng thái.
 
-Bước 5 – Quan hệ số lượng giữa các đối tượng:
-- Customer 1—n Reservation; Table 1—n Reservation.
-- Table 1—n Order; Customer 0..1—n Order; SalesStaff 1—n Order.
-- Order 1—n OrderItem; Order 1—0..n Payment; Order 1—0..1 Invoice.
-- Dish n—m Ingredient (qua DishIngredient); Combo n—m Dish (qua ComboItem).
-- Supplier 1—n InventoryReceipt; InventoryReceipt 1—n InventoryReceiptItem.
+B) Đặt bàn trực tuyến (Reserve Table Online)
+- Luồng chuẩn:
+  1) Khách mở form đặt bàn → nhập thời gian đến, số người, thông tin liên hệ (tên, điện thoại, email tùy chọn), ghi chú.
+  2) Hệ thống kiểm tra slot còn trống (so với số bàn, ca làm) → đề xuất loại bàn phù hợp.
+  3) Khách xác nhận → hệ thống tạo `Reservation` trạng thái "PENDING" và gửi mã xác nhận.
+  4) Nhân viên/auto rule duyệt → trạng thái "CONFIRMED"; đến giờ, khi khách check-in, chuyển thành mở `Order` tại bàn được gán.
+- Ngoại lệ:
+  - Trùng giờ vượt sức chứa → đề xuất thời gian khác hoặc ghi vào waitlist.
+  - Liên hệ không hợp lệ → báo lỗi, không tạo đặt bàn.
+- Tiêu chí chấp nhận:
+  - Có mã đặt bàn duy nhất; gửi thông báo SMS/Email (nếu cấu hình).
+  - Có thể hủy/sửa trước giờ đến theo chính sách (cập nhật audit log).
+
+C) Ghi order tại bàn (Take Order at Table)
+- Luồng chuẩn:
+  1) Nhân viên mở order của bàn → tìm món theo từ khóa/danh mục.
+  2) Thêm dòng món: số lượng, ghi chú (ít cay, không hành…); nếu chọn combo → tự bung các món con (tuỳ chính sách giá).
+  3) Hệ thống tính tiền dòng = SL × đơn giá; tính tổng tạm tính; lưu nháp tức thời (autosave).
+  4) Có thể tách món theo khách A/B, chuyển bàn hoặc gộp order khác.
+- Ngoại lệ:
+  - Món hết hàng (hết nguyên liệu) → cảnh báo trước khi thêm; cho phép thay thế món gợi ý.
+  - Đơn giá thay đổi (khuyến mãi/giờ vàng) → hiển thị xác nhận giá mới.
+
+D) Nhận thanh toán tại bàn (Receive Payment)
+- Luồng chuẩn:
+  1) Mở menu Thanh toán → nhập mã/tên bàn → chọn bàn từ kết quả.
+  2) Hệ thống tổng hợp hóa đơn: tất cả dòng món chưa thanh toán, thuế/chiết khấu (nếu có), phụ thu (dịch vụ… nếu cấu hình).
+  3) Tùy chọn tách hóa đơn theo khách hoặc theo mục; ghép nhiều order nếu gộp bàn.
+  4) Chọn phương thức thanh toán: Tiền mặt/Thẻ/Chuyển khoản (có thể đa phương thức: nhiều payment cho một order).
+  5) Xác nhận → sinh `Invoice` (số hóa đơn theo pattern), tạo `Payment`(s), in hóa đơn; cập nhật trạng thái `Order=PAID`, `Table=FREE`.
+- Ngoại lệ:
+  - Chênh lệch tiền khách đưa/tiền thừa → hiển thị tính toán và yêu cầu xác nhận.
+  - Lỗi in hóa đơn → lưu PDF và cho phép in lại, không tạo trùng số hóa đơn.
+  - Hủy thanh toán trong ca → rollback payment và invoice nếu chưa khóa ca.
+- Tiêu chí chấp nhận:
+  - Hóa đơn rõ ràng: số, ngày giờ, bàn, nhân viên, danh sách món, đơn giá, thành tiền, tổng cộng, phương thức.
+  - Không cho thanh toán nếu còn dòng món "nháp" chưa chốt.
+
+E) Kho nhập nguyên liệu (Receive Inventory)
+- Luồng chuẩn:
+  1) Tạo phiếu nhập: chọn NCC → thêm dòng: nguyên liệu, SL, đơn giá.
+  2) Lưu nháp → kiểm tra hợp lệ (đơn vị, số âm, tồn kho) → Duyệt → cập nhật tồn kho tức thì.
+  3) In phiếu/Export CSV; tra cứu lịch sử nhập theo kỳ và NCC.
+- Ngoại lệ:
+  - Trùng hóa đơn NCC → cảnh báo/khóa theo số chứng từ.
+  - Duyệt không thành công vì chênh lệch kiểm đếm → yêu cầu điều chỉnh/ghi chú.
+
+F) Thống kê/Báo cáo
+- Các báo cáo mặc định: Doanh thu theo ngày/tuần/tháng; Top 10 món bán chạy; Top khách hàng; Giá trị nhập theo NCC; Tồn kho dưới ngưỡng.
+- Bộ lọc: khoảng thời gian, chi nhánh (nếu đa chi nhánh), nhóm món, kênh bán.
+- Xuất CSV/PDF; lưu bộ lọc ưa thích cho người dùng.
+
+Bước 4 – Đối tượng và thuộc tính lõi (bản mở rộng):
+- Đã liệt kê trong Bảng từ khóa. Bổ sung một số trường gợi ý triển khai:
+  - Dish: category, tags, display_order.
+  - Ingredient: reorder_level, barcode.
+  - Order: subtotal, discount_amount, tax_amount, service_fee, grand_total.
+  - Payment: reference_no (mã giao dịch thẻ/CK), note.
+  - Invoice: template_code, qr_text.
+  - Reservation: channel (web/app/phone), confirm_code.
+
+Bước 5 – Quan hệ & Trạng thái đối tượng:
+- Cardinality (tóm tắt):
+  - Customer 1—n Reservation; Table 1—n Reservation; Table 1—n Order; Order 1—n OrderItem; Order 1—0..n Payment; Order 1—0..1 Invoice; Dish n—m Ingredient; Combo n—m Dish; Supplier 1—n InventoryReceipt; InventoryReceipt 1—n InventoryReceiptItem.
+- Trạng thái chính:
+  - Table: FREE → OCCUPIED → CLEANING → FREE.
+  - Order: OPEN → SERVING → PENDING_PAYMENT → PAID → (CANCELED).
+  - Reservation: PENDING → CONFIRMED → CHECKED_IN → CANCELED/NO_SHOW.
+  - Inventory Receipt: DRAFT → APPROVED → CANCELED.
+- Toàn vẹn dữ liệu & quy tắc:
+  - Không xóa cứng đối tượng tham chiếu bởi giao dịch; dùng trạng thái/soft-delete.
+  - Tổng tiền order = Σ(amount dòng) ± discount + tax + service_fee.
+  - Invoice duy nhất cho mỗi order đã thanh toán; Payment có thể nhiều.
+
+Bước 6 – Ma trận phân quyền & NFR:
+- Phân quyền (tóm tắt):
+  - Manager: full CRUD danh mục; xem mọi báo cáo; duyệt phiếu kho; cấu hình hệ thống.
+  - Warehouse: tạo/duyệt phiếu nhập (theo phân công); xem tồn kho; không truy cập thanh toán.
+  - Sales: mở/ghi order; chuyển/gộp bàn; tạo payment/invoice; không sửa danh mục.
+  - Customer: tìm món; đặt bàn/đặt món; xem lịch sử đặt bàn của chính họ.
+- NFR:
+  - Hiệu năng: tìm món < 1s (10k món); tạo hóa đơn < 2s.
+  - Bảo mật: bắt buộc đăng nhập cho tác vụ nội bộ; phân quyền theo vai trò; log truy cập/ thay đổi quan trọng.
+  - Khả dụng: backup hằng ngày; khôi phục dữ liệu ≤ 1 giờ cho sự cố thường gặp.
+  - Khả mở rộng: sẵn sàng tách kho dữ liệu/ đa chi nhánh.
 
 ---
 
