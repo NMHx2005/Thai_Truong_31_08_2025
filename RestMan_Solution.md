@@ -206,6 +206,31 @@ Bước 6 – Ma trận phân quyền & NFR:
 
 ---
 
+## VẼ BIỂU ĐỒ USE CASE TỔNG QUAN + MÔ TẢ USE CASE
+
+[Chèn hình PlantUML: vp_import/usecase_overview.puml]
+
+Mô tả các use case (RestMan):
+- Đăng nhập: Cho phép mọi tác nhân (Manager, Sales Staff, Warehouse Staff) truy cập hệ thống bằng tài khoản được cấp. Xác thực username/password; khóa tài khoản sau N lần sai; ghi nhật ký đăng nhập.
+- Đăng xuất: Cho phép mọi tác nhân thoát khỏi hệ thống an toàn, hủy phiên và cookie, giải phóng khóa ca làm việc (nếu có).
+- Quản lý thông tin món ăn: Cho phép nhân viên quản lý thêm/sửa/xóa/ẩn-hiện món; nhập tên, mô tả, giá, hình ảnh, phân loại; gợi ý combo liên quan; kiểm tra trùng mã.
+- Quản lý thông tin nguyên liệu: Cho phép nhân viên quản lý thêm/sửa/xóa nguyên liệu; thiết lập đơn vị tính, giá nhập chuẩn, ngưỡng cảnh báo tồn kho; liên kết định mức với món.
+- Quản lý thông tin nhà cung cấp: Cho phép nhân viên kho thêm/sửa/xóa nhà cung cấp; lưu thông tin liên hệ, ghi chú chất lượng, xếp hạng NCC; kiểm tra trùng tên/mã số thuế.
+- Xem thống kê món ăn: Cho phép quản lý xem báo cáo doanh thu/số lượng theo món, theo thời gian; lọc theo danh mục; xuất CSV/PDF.
+- Xem thống kê nguyên liệu: Cho phép quản lý xem lượng nhập/tiêu thụ theo kỳ; cảnh báo tồn kho dưới ngưỡng; chi phí nguyên liệu theo NCC.
+- Xem thống kê khách hàng: Cho phép quản lý xem số lượt đến, mức chi tiêu, nhóm khách hàng; top khách theo doanh thu; hành vi đặt bàn.
+- Xem thống kê nhà cung cấp: Cho phép quản lý xem giá trị nhập theo NCC, tỷ lệ đúng hạn, đánh giá chất lượng; so sánh NCC theo mặt hàng.
+- Tìm kiếm thông tin món ăn: Cho phép khách hàng tra cứu món theo từ khóa/loại/giá; xem chi tiết món, gợi ý combo; hỗ trợ không dấu/viết hoa-thường.
+- Đặt bàn trực tuyến: Cho phép khách hàng đặt chỗ theo thời gian và số người; nhận mã xác nhận; cho phép hủy/sửa theo chính sách.
+- Đặt món trực tuyến: Cho phép khách hàng chọn món trước khi đến (nếu bật); lưu kèm đặt bàn; hiển thị giá dự kiến.
+- Nhận khách tại bàn: Cho phép nhân viên bán hàng tiếp đón, gán bàn trống phù hợp, mở order mới và ghi chú yêu cầu đặc biệt.
+- Ghi order tại bàn: Cho phép nhân viên bán hàng thêm/sửa/xóa dòng món, chọn combo, ghi chú chế biến; tách món theo khách; chuyển/gộp bàn.
+- Nhận thanh toán: Cho phép nhân viên bán hàng tính tiền hóa đơn, áp dụng thuế/chiết khấu, chọn phương thức thanh toán (tiền mặt/thẻ/chuyển khoản), in hóa đơn; cập nhật Order=PAID, Table=FREE.
+- Nhập nguyên liệu từ nhà cung cấp: Cho phép nhân viên kho tạo và duyệt phiếu nhập; thêm dòng nguyên liệu, SL, đơn giá; cập nhật tồn kho khi duyệt; in phiếu.
+- Xem thống kê khách hàng theo doanh thu: Cho phép quản lý chọn khoảng thời gian để xem danh sách khách hàng và tổng doanh thu; xem drill-down các hóa đơn theo từng khách.
+
+---
+
 ## Câu 1. Use Case cho 2 chức năng trọng tâm
 
 ### 1.a) Biểu đồ use case (Mermaid)
