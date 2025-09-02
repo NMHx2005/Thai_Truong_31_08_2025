@@ -52,6 +52,79 @@
 
 ---
 
+## MÔ TẢ HỆ THỐNG BẰNG NGÔN NGỮ TỰ NHIÊN (RestMan)
+
+Tóm tắt các bước thực hiện:
+- Bước 1: Giới thiệu mục đích hệ thống
+- Bước 2: Phạm vi hệ thống (đối tượng sử dụng và chức năng theo vai trò)
+- Bước 3: Mô tả chi tiết hoạt động nghiệp vụ cho từng chức năng chính
+- Bước 4: Các đối tượng được quản lý/xử lý và thuộc tính cốt lõi
+- Bước 5: Quan hệ (số lượng) giữa các đối tượng
+
+Bước 1 – Mục đích của hệ thống:
+- RestMan là ứng dụng web hỗ trợ quản lý vận hành nhà hàng: quản lý danh mục món ăn/ nguyên liệu/ nhà cung cấp, thiết lập menu combo, quản trị kho nhập nguyên liệu, phục vụ khách tại bàn (mở order, ghi món), và thanh toán/in hóa đơn nhanh chóng.
+- Hệ thống cung cấp công cụ tìm kiếm món cho khách hàng và chức năng đặt bàn/đặt món trực tuyến để tối ưu quy trình phục vụ.
+- Quản lý có thể theo dõi thống kê doanh số theo món/khách hàng/nhà cung cấp và tình trạng tồn kho để ra quyết định.
+
+Bước 2 – Phạm vi hệ thống (vai trò và chức năng):
+- Nhân viên (Staff – mọi vai trò):
+  - Đăng nhập, Đăng xuất.
+- Nhân viên quản lý (Manager):
+  - Xem thống kê: món, nguyên liệu, khách hàng, nhà cung cấp.
+  - Quản lý món ăn; thiết lập menu combo.
+  - Quản lý nguyên liệu (chuẩn hóa dữ liệu cho kho).
+- Nhân viên kho (Warehouse Staff):
+  - Nhập nguyên liệu từ nhà cung cấp (tạo phiếu nhập, cập nhật tồn kho).
+  - Quản lý nhà cung cấp.
+- Nhân viên bán hàng (Sales Staff):
+  - Nhận khách tại bàn, gán bàn và mở order.
+  - Ghi order tại bàn (món/SL/ghi chú), cập nhật trạng thái order.
+  - Nhận thanh toán tại bàn, in hóa đơn, giải phóng bàn.
+- Khách hàng (Customer):
+  - Tìm kiếm món ăn.
+  - Đặt bàn/đặt món trực tuyến (tùy chính sách nhà hàng).
+
+Bước 3 – Hoạt động nghiệp vụ chi tiết:
+- Khách hàng tìm kiếm món ăn:
+  1) Truy cập website → chọn menu "Tìm món" → nhập từ khóa → nhấn tìm.
+  2) Hệ thống trả danh sách món phù hợp (tên, giá, mô tả ngắn, hình đại diện, tình trạng bán).
+  3) Khách chọn một món để xem chi tiết (mô tả, giá, nguyên liệu chính, hình ảnh, khuyến nghị combo).
+  4) Ngoại lệ: không có kết quả → gợi ý từ khóa gần đúng/ nhóm món liên quan.
+- Nhân viên nhận thanh toán tại bàn:
+  1) Mở menu "Thanh toán" → nhập tên/mã bàn.
+  2) Chọn bàn đúng từ danh sách kết quả; hệ thống tải order đang mở/chờ thanh toán.
+  3) Hiển thị hóa đơn: danh sách món, SL, đơn giá, thành tiền từng dòng, tổng tiền, thuế/giảm giá.
+  4) Nhân viên xác nhận → hệ thống tạo bản ghi Payment và sinh số hóa đơn (Invoice) → in hóa đơn.
+  5) Cập nhật trạng thái order = "PAID", bàn = "FREE"; ghi nhận phương thức thanh toán (cash/card/transfer).
+  6) Ngoại lệ: tách/ghép hóa đơn, điều chỉnh dòng món, hủy thanh toán (rollback) – được hỗ trợ theo phân quyền.
+- Kho nhập nguyên liệu từ NCC:
+  1) Nhân viên kho tạo phiếu nhập → chọn NCC → nhập danh sách nguyên liệu (mã, SL, đơn giá).
+  2) Hệ thống kiểm tra nhất quán (đơn vị tính, tồn kho âm) → lưu phiếu nhập.
+  3) Cập nhật tồn kho ngay khi phiếu nhập được ghi nhận; có thể hỗ trợ trạng thái "Nháp/Hoàn tất".
+- Quản lý menu combo:
+  1) Tạo combo → chọn các món và số lượng → nhập giá combo.
+  2) Hệ thống kiểm tra định mức/giá; combo xuất hiện trên giao diện order và gợi ý kèm món.
+- Thống kê (ví dụ):
+  - Doanh thu theo món, theo ngày/tuần/tháng.
+  - Top khách hàng theo doanh tiêu dùng.
+  - Giá trị nhập nguyên liệu theo nhà cung cấp.
+
+Bước 4 – Đối tượng và thuộc tính lõi (tóm tắt):
+- Con người: UserAccount/Staff/Manager/SalesStaff/WarehouseStaff, Customer, Supplier.
+- Danh mục & cấu hình: Dish, Ingredient, DishIngredient, Combo, ComboItem, TableEntity.
+- Giao dịch: Order, OrderItem, Payment, Invoice, Reservation.
+- Kho: InventoryReceipt, InventoryReceiptItem.
+- Thuộc tính chi tiết cho từng thực thể đã liệt kê ở phần "BẢNG TỪ KHÓA" và được mô tả kỹ trong sơ đồ lớp.
+
+Bước 5 – Quan hệ số lượng giữa các đối tượng:
+- Customer 1—n Reservation; Table 1—n Reservation.
+- Table 1—n Order; Customer 0..1—n Order; SalesStaff 1—n Order.
+- Order 1—n OrderItem; Order 1—0..n Payment; Order 1—0..1 Invoice.
+- Dish n—m Ingredient (qua DishIngredient); Combo n—m Dish (qua ComboItem).
+- Supplier 1—n InventoryReceipt; InventoryReceipt 1—n InventoryReceiptItem.
+
+---
+
 > Tài liệu này tổng hợp phân tích yêu cầu, use case, kịch bản, mô hình lớp phân tích/thiết kế, sơ đồ giao tiếp, ánh xạ CSDL, khung mã Java, sơ đồ gói và triển khai 3 tầng cho hệ thống quản lý nhà hàng RestMan.
 
 ---
@@ -222,118 +295,3 @@ CREATE TABLE invoices (
   issued_at TIMESTAMP NOT NULL DEFAULT NOW()
 );
 ```
-
-Gợi ý thêm các bảng Ingredient/Supplier/Inventory nếu triển khai đủ nghiệp vụ kho.
-
-### 4.b) Khung mã Java (POJO + Service Interface)
-
-```java
-// Domain
-public class Dish {
-  private Long id;
-  private String code;
-  private String name;
-  private String description;
-  private BigDecimal price;
-  private boolean active;
-  private String imageUrl;
-  // getters/setters
-}
-
-public class OrderItem {
-  private Long id;
-  private Long orderId;
-  private Long dishId;
-  private int quantity;
-  private BigDecimal unitPrice;
-  private BigDecimal amount; // quantity * unitPrice
-  // getters/setters
-}
-
-public class Order {
-  private Long id;
-  private Long tableId;
-  private Long customerId;
-  private Long salesStaffId;
-  private Instant createdAt;
-  private String status; // OPEN, PENDING_PAYMENT, PAID
-  private List<OrderItem> items;
-  // getters/setters
-}
-
-public class Payment {
-  private Long id;
-  private Long orderId;
-  private String method; // CASH/CARD/TRANSFER
-  private BigDecimal paidAmount;
-  private Instant paidAt;
-  private String status; // SUCCESS/FAILED
-  // getters/setters
-}
-
-// Repository (DAO) – giả lập interface
-public interface DishRepository {
-  List<Dish> findByNameContains(String keyword);
-  Optional<Dish> findById(Long id);
-}
-
-public interface OrderRepository {
-  Optional<Order> findOpenOrderByTableKeyword(String keyword);
-  void updateStatus(Long orderId, String status);
-}
-
-public interface PaymentRepository {
-  Payment save(Payment p);
-}
-
-// Service
-public interface DishService {
-  List<Dish> search(String keyword);
-  Dish getDetail(Long id);
-}
-
-public interface OrderService {
-  Optional<Order> findOpenOrder(String tableKeyword);
-  void markPaid(Long orderId);
-}
-
-public interface PaymentService {
-  Payment pay(Long orderId, String method, BigDecimal amount);
-}
-
-// Giải thích ngắn gọn phương thức:
-// - DishService.search: kiểm tra keyword rỗng → trả về danh sách rỗng; ngược lại gọi Repo để tìm.
-// - DishService.getDetail: kiểm tra id hợp lệ → lấy món ăn; nếu không tồn tại → ném NotFound.
-// - OrderService.findOpenOrder: tìm order ở trạng thái OPEN/PENDING_PAYMENT theo bàn.
-// - OrderService.markPaid: cập nhật trạng thái order và bàn về TRỐNG.
-// - PaymentService.pay: tạo Payment, lưu Repo, gọi OrderService.markPaid, sinh Invoice (qua InvoiceService nếu có).
-```
-
----
-
-## Câu 5. Biểu đồ gói và triển khai
-
-### 5.a) Package diagram (Mermaid)
-[Chèn hình PlantUML: vp_import/package_diagram.puml]
-
-Khuyến nghị cấu trúc gói:
-- `com.restman.controller`
-- `com.restman.service`
-- `com.restman.repository`
-- `com.restman.model` (domain)
-- `com.restman.dto`
-- `com.restman.config`
-
-### 5.b) Deployment diagram – kiến trúc 3 tầng J2EE
-[Chèn hình PlantUML: vp_import/deployment_diagram.puml]
-
----
-
-## Phụ lục – Quy tắc tính tiền cơ bản
-- Thành tiền dòng = quantity × unit_price.
-- Tổng tiền = sum(thành tiền) – chiết khấu + thuế.
-- Cho phép tách/ghép hóa đơn bằng cách tạo nhiều `Payment` gắn cùng `order_id` và khóa cứng một `Invoice` duy nhất khi hoàn tất.
-
----
-
-Tài liệu kết thúc. Bạn có thể mở trực tiếp file này để xem sơ đồ Mermaid; nếu IDE không render, hãy dùng các công cụ hỗ trợ Mermaid để xuất hình ảnh khi cần.
