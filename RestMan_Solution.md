@@ -1,5 +1,57 @@
 # RestMan – Lời giải đầy đủ cho ĐỀ SỐ 20
 
+## BẢNG TỪ KHÓA (RestMan)
+
+- Nhóm khái niệm liên quan đến con người
+
+| STT | Tên Tiếng Việt | Tiếng Anh | Giải thích |
+| --- | --- | --- | --- |
+| 1 | Nhân viên | Staff | Người làm việc trong nhà hàng, có thể thuộc các vai trò: quản lý, bán hàng, kho. Thực hiện nghiệp vụ theo quyền hạn. |
+| 2 | Nhân viên quản lý | Manager | Người có thẩm quyền cao nhất, truy cập chức năng quản lý danh mục, menu combo, xem thống kê tổng hợp. |
+| 3 | Nhân viên bán hàng | Sales Staff | Phục vụ tại bàn: nhận khách, ghi order, xử lý thanh toán, in hóa đơn. |
+| 4 | Nhân viên kho | Warehouse Staff | Nhập nguyên liệu từ nhà cung cấp, quản lý tồn kho, cập nhật chứng từ nhập. |
+| 5 | Khách hàng | Customer | Người dùng cuối, có thể tìm món, đặt bàn/đặt món trực tuyến, dùng dịch vụ tại nhà hàng. |
+| 6 | Nhà cung cấp | Supplier | Tổ chức/cá nhân cung cấp nguyên liệu cho nhà hàng, theo dõi giao dịch và chất lượng. |
+
+- Nhóm khái niệm liên quan đến hành động
+
+| STT | Tên Tiếng Việt | Tiếng Anh | Giải thích |
+| --- | --- | --- | --- |
+| 7 | Đăng nhập | Login | Xác thực để truy cập hệ thống RestMan với quyền theo vai trò. |
+| 8 | Đăng xuất | Logout | Thoát khỏi hệ thống an toàn. |
+| 9 | Quản lý món ăn | Manage Dish Information | Thêm/sửa/xóa/cập nhật thông tin món ăn. |
+| 10 | Quản lý nguyên liệu | Manage Ingredient Information | Thêm/sửa/xóa/cập nhật nguyên liệu, đơn vị tính, giá nhập. |
+| 11 | Quản lý nhà cung cấp | Manage Supplier Information | Quản lý danh mục nhà cung cấp, thông tin liên hệ, ghi chú. |
+| 12 | Thiết lập menu combo | Setup Menu Combo | Tạo combo gồm nhiều món với giá ưu đãi. |
+| 13 | Xem thống kê | View Statistics | Xem các báo cáo tổng hợp: món, nguyên liệu, khách hàng, nhà cung cấp. |
+| 14 | Tìm kiếm món ăn | Search Dishes | Khách nhập từ khóa, hệ thống trả về danh sách món phù hợp; chọn món để xem chi tiết. |
+| 15 | Đặt bàn trực tuyến | Reserve Table Online | Khách đặt chỗ theo thời gian/người, ghi chú; duyệt trạng thái. |
+| 16 | Đặt món trực tuyến | Place Order Online | Khách chọn món trước khi đến (tùy chính sách), liên kết với đặt bàn. |
+| 17 | Nhận khách tại bàn | Receive Customer at Table | Bố trí bàn cho khách đến trực tiếp, mở order cho bàn. |
+| 18 | Ghi order tại bàn | Take Order at Table | Thêm dòng món/SL/ghi chú vào order đang mở. |
+| 19 | Nhận thanh toán tại bàn | Receive Payment at Table | Tìm bàn → xem hóa đơn → xác nhận → in hóa đơn → nhận tiền mặt/chuyển khoản. |
+| 20 | Nhập nguyên liệu từ NCC | Receive Inventory from Supplier | Tạo phiếu nhập, kiểm đếm, cập nhật tồn kho. |
+
+- Nhóm khái niệm liên quan đến đối tượng xử lý
+
+| STT | Tên Tiếng Việt | Tiếng Anh | Giải thích |
+| --- | --- | --- | --- |
+| 21 | Món ăn | Dish | Tên, mô tả, giá, hình ảnh, trạng thái kinh doanh. |
+| 22 | Nguyên liệu | Ingredient | Mã, tên, đơn vị, giá nhập, tồn kho, trạng thái. |
+| 23 | Món–Nguyên liệu | Dish Ingredient | Bảng n-n xác định định mức nguyên liệu cho từng món. |
+| 24 | Combo | Combo | Gói nhiều món với đơn giá combo. |
+| 25 | Mục combo | Combo Item | Bảng n-n giữa combo và món. |
+| 26 | Bàn | Table | Mã bàn, sức chứa, trạng thái (FREE/OCCUPIED/CLEANING). |
+| 27 | Đặt bàn | Reservation | Khách, bàn, thời điểm, số người, ghi chú, trạng thái. |
+| 28 | Đơn gọi món | Order | Bàn, khách (tùy chọn), nhân viên, thời gian tạo, trạng thái. |
+| 29 | Dòng món | Order Item | Món/Combo, số lượng, đơn giá, thành tiền. |
+| 30 | Thanh toán | Payment | Phương thức, số tiền, thời điểm, trạng thái. |
+| 31 | Hóa đơn | Invoice | Số hóa đơn, tổng tiền, thuế/chiết khấu, thành tiền, thời điểm xuất. |
+| 32 | Phiếu nhập kho | Inventory Receipt | NCC, NV kho, thời điểm, ghi chú. |
+| 33 | Dòng phiếu nhập | Inventory Receipt Item | Nguyên liệu, số lượng, đơn giá, thành tiền. |
+
+---
+
 > Tài liệu này tổng hợp phân tích yêu cầu, use case, kịch bản, mô hình lớp phân tích/thiết kế, sơ đồ giao tiếp, ánh xạ CSDL, khung mã Java, sơ đồ gói và triển khai 3 tầng cho hệ thống quản lý nhà hàng RestMan.
 
 ---
