@@ -272,6 +272,67 @@ Mô tả các use case (RestMan):
 
 ---
 
+### 1.c) Use Case chi tiết + Mô tả UC cho module “Tìm kiếm thông tin món ăn”
+
+[Chèn hình PlantUML: vp_import/usecase_search_dish_detail.puml]
+
+Phạm vi và mục tiêu
+- Phạm vi: Khách hàng (không cần đăng nhập) hoặc đã đăng nhập đều có thể tra cứu.
+- Mục tiêu: Tìm và xem chi tiết món phù hợp từ khóa trong thời gian ngắn, không phân biệt hoa/thường/có dấu.
+
+Các Use Case thành phần (đều bị chứa trong UC Search Dishes)
+- Search Dishes: Cho phép nhập từ khóa, chọn bộ lọc (loại món, tầm giá), sắp xếp kết quả.
+- View Dish List: Hiển thị danh sách món khớp; phân trang; hiển thị ảnh/giá/mô tả ngắn/trạng thái.
+- View Dish Detail: Hiển thị chi tiết món; nguyên liệu chính; hình ảnh; gợi ý combo/món liên quan.
+
+Tiền điều kiện
+- CSDL có dữ liệu món; kết nối hệ thống hoạt động bình thường.
+
+Hậu điều kiện
+- Không bắt buộc thay đổi dữ liệu. Hệ thống ghi log từ khóa tìm kiếm phục vụ gợi ý.
+
+Luồng chính (Happy path)
+1) Người dùng mở menu “Tìm món”.
+2) Nhập từ khóa vào ô tìm kiếm; có thể chọn thêm bộ lọc: danh mục, tầm giá, trạng thái bán; nhấn Tìm.
+3) Hệ thống chuẩn hóa từ khóa (trim/bỏ dấu/lowercase), dựng truy vấn tìm theo tên/bí danh/từ khóa mô tả.
+4) Hệ thống trả về danh sách kết quả theo trang (mặc định 20 mục), sắp xếp theo mức độ phù hợp → hiển thị ảnh, tên, giá, mô tả ngắn, nhãn (Mới/Đề xuất/Hết hàng).
+5) Người dùng bấm vào một món bất kỳ.
+6) Hệ thống hiển thị trang chi tiết món: tên đầy đủ, mô tả, giá bán hiện hành, hình ảnh, nguyên liệu chính, món liên quan, combo gợi ý (nếu có), trạng thái có thể đặt trước hay không.
+
+Ngoại lệ/nhánh
+- 3a) Từ khóa rỗng: hệ thống không truy vấn, hiển thị gợi ý từ khóa phổ biến hoặc top món bán chạy.
+- 4a) Không có kết quả: hiển thị thông báo “Không tìm thấy” và đề xuất từ khóa gần đúng; nút “Xóa bộ lọc”.
+- 6a) Món tạm ngừng bán: hiển thị nhãn “Ngừng bán/Hết” và ẩn nút đặt trước.
+- 6b) Giá món đang trong chương trình khuyến mãi: hiển thị giá gạch bỏ + giá khuyến mãi; ghi chú thời gian áp dụng.
+
+Quy tắc nghiệp vụ và kiểm tra hợp lệ
+- Bỏ dấu và không phân biệt hoa/thường khi so khớp từ khóa.
+- Hỗ trợ tìm gần đúng (LIKE) và gợi ý gần đúng (Levenshtein/Soundex nếu bật).
+- Bộ lọc tầm giá phải có min ≤ max; nếu không, hệ thống tự hoán đổi.
+- Phân trang: size ∈ [10, 100]; mặc định 20; tối đa 100 để bảo đảm hiệu năng.
+
+Trường dữ liệu và giao diện
+- Ô từ khóa: text (1–100 ký tự).
+- Bộ lọc: danh mục (dropdown), tầm giá (min/max), trạng thái (đang bán/tạm ngưng), sắp xếp (phù hợp/giá tăng/giá giảm/mới nhất).
+- Danh sách: card món gồm ảnh 1:1, tên (tối đa 2 dòng), giá, mô tả ngắn (1 dòng), nhãn trạng thái.
+- Trang chi tiết: ảnh lớn, thông tin cơ bản, thành phần chính, gợi ý combo, nút “Thêm vào đặt trước” (nếu bật).
+
+Tiêu chí chấp nhận (Acceptance Criteria)
+- Tìm kiếm với 10k món: phản hồi < 1 giây cho câu truy vấn đơn giản (keyword + phân trang mặc định).
+- Kết quả hiển thị đúng bộ lọc và thứ tự sắp xếp đã chọn.
+- Trang chi tiết luôn hiển thị đủ: tên, mô tả, giá hiện hành, hình, thành phần chính, trạng thái bán.
+- Không có lỗi JS/HTTP trong nhật ký trình duyệt cho các thao tác thông thường.
+
+Theo dõi & phân tích (tùy chọn)
+- Ghi lại top từ khóa theo ngày; tỷ lệ không có kết quả; CTR từ danh sách sang chi tiết; tỷ lệ chuyển đổi đặt trước.
+
+Bảo mật & quyền
+- Mọi người đều có thể tìm và xem chi tiết. Chỉ người có quyền mới đặt trước/giỏ hàng (nếu bật tính năng này).
+
+[Hết mục Use Case chi tiết “Tìm kiếm thông tin món ăn”]
+
+---
+
 ## Câu 2. Thực thể và biểu đồ lớp phân tích
 
 ### 2.a) Danh sách lớp thực thể và thuộc tính cơ bản
